@@ -394,8 +394,12 @@ class SqlAlchemyApi(Api):
 
   @query_error_handler
   def get_log(self, notebook, snippet, startFrom=None, size=None):
-    return ''
+    guid = snippet['result']['handle']['guid']
+    connection = CONNECTIONS.get(guid)
+    result = connection['result']
+    cursor = result.cursor
 
+    return cursor.fetch_logs()
 
   @query_error_handler
   def close_statement(self, notebook, snippet):
